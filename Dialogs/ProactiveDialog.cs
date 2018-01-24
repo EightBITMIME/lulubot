@@ -24,6 +24,7 @@ namespace Microsoft.Bot.Sample.ProactiveBot
         {
             var message = await argument;
                 // Create a queue Message
+                //test comment
                 var queueMessage = new Message
                 {
                     RelatesTo = context.Activity.ToConversationReference(),
