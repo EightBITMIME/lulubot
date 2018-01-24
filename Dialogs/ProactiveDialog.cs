@@ -33,7 +33,7 @@ namespace Microsoft.Bot.Sample.ProactiveBot
                 // write the queue Message to the queue
                 await AddMessageToQueueAsync(JsonConvert.SerializeObject(queueMessage));
 
-                await context.PostAsync($"You said {queueMessage.Text}. Your message has been added to a queue, and it might be sent back to you via a Function shortly.");
+                await context.PostAsync($"<sarcastic mocking> {queueMessage.Text}.");
                 context.Wait(MessageReceivedAsync);
         }
 
