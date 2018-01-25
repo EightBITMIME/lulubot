@@ -10,6 +10,7 @@ using System.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Newtonsoft.Json;
+using System.Net.Mail;
 
 namespace Microsoft.Bot.Sample.ProactiveBot
 {
@@ -19,6 +20,9 @@ namespace Microsoft.Bot.Sample.ProactiveBot
         public String incident = "";
         public ArrayList updates = new ArrayList();
         public int updateNum = 0;
+        public string[] EmailAddresses = ["lhutchison@textron.com", "jcoles@textron.com", "cschultz@textron.com", "dcyr@textron.com"];
+        public String Body = "Lulu Test";
+        public string Subject = "Lulu Test";
 
         public async Task StartAsync(IDialogContext context)
         {
@@ -37,6 +41,8 @@ namespace Microsoft.Bot.Sample.ProactiveBot
             bool d = message.Text.Contains("Ok to close") || message.Text.Contains("ok to close");
 
             bool e = message.Text.StartsWith("Status") || message.Text.StartsWith("status");
+
+            bool f = message.Text.StartsWith("Send email") || message.Text.StartsWith("send email");
 
             // Create a queue Message
             var queueMessage = new Message
@@ -64,7 +70,8 @@ namespace Microsoft.Bot.Sample.ProactiveBot
             //update status
             else if (c)
             {
-                updates.Add("Update " + updateNum + " " + message.Text);
+                updates.Add(updateNum + " : " + message.Text);
+                updateNum++;
                 await context.PostAsync($"Status updated");
                 context.Wait(MessageReceivedAsync);
             }
@@ -83,6 +90,17 @@ namespace Microsoft.Bot.Sample.ProactiveBot
                 {
                     await context.PostAsync(updates[i].ToString());
                 }
+            }
+            else if (f)
+            {
+                //send email
+                await context.PostAsync($"Sending emails to all participants");
+
+                for (int j = 0; j < EmailAddresses.Length; j++)
+                {
+                    SendEmail(EmailAddresses[j], " ", "svc_hq_o365_test_bo@txt.textron.com", "Lulu", Subject, Body, false);
+                }
+
             }
             else
             {
@@ -108,6 +126,41 @@ namespace Microsoft.Bot.Sample.ProactiveBot
             // Create a message and add it to the queue.
             var queuemessage = new CloudQueueMessage(message);
             await queue.AddMessageAsync(queuemessage);
+        }
+
+        public static bool SendEmail(string To, string ToName, string From, string FromName, string Subject, string Body, bool IsBodyHTML)
+        {
+            try
+            {
+                MailAddress FromAddr = new MailAddress(From, FromName, System.Text.Encoding.UTF8);
+                MailAddress ToAddr = new MailAddress(To, ToName, System.Text.Encoding.UTF8);
+                var smtp = new SmtpClient
+                {
+                    Host = "smtp.gmail.com",
+                    Port = 25,
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Credentials = new System.Net.NetworkCredential("your email address", "your password")
+                };
+
+                using (MailMessage message = new MailMessage(FromAddr, ToAddr)
+                {
+                    Subject = Subject,
+                    Body = Body,
+                    IsBodyHtml = IsBodyHTML,
+                    BodyEncoding = System.Text.Encoding.UTF8,
+
+                })
+                {
+                    smtp.Send(message);
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
     }
