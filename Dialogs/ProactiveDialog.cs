@@ -42,7 +42,7 @@ namespace Microsoft.Bot.Sample.ProactiveBot
 
             bool e = message.Text.StartsWith("Status") || message.Text.StartsWith("status");
 
-            bool f = message.Text.Contains("Send email") || message.Text.Contains("send email");
+            bool email = message.Text.Contains("Send email") || message.Text.Contains("send email");
 
             // Create a queue Message
             var queueMessage = new Message
@@ -91,11 +91,9 @@ namespace Microsoft.Bot.Sample.ProactiveBot
                     await context.PostAsync(updates[i].ToString());
                 }
             }
-            else if (f)
+            else if (email)
             {
-                //send email
                 await context.PostAsync($"Sending emails to all participants");
-
                 for (int j = 0; j < EmailAddresses.Length; j++)
                 {
                     SendEmail(EmailAddresses[j], " ", "svc_hq_o365_test_bo@txt.textron.com", "Lulu", Subject, Body, false);
