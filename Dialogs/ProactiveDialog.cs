@@ -42,7 +42,7 @@ namespace Microsoft.Bot.Sample.ProactiveBot
 
             bool e = message.Text.StartsWith("Status") || message.Text.StartsWith("status");
 
-            bool f = message.Text.StartsWith("Send email") || message.Text.StartsWith("send email");
+            bool f = message.Text.Contains("Send email") || message.Text.Contains("send email");
 
             // Create a queue Message
             var queueMessage = new Message
@@ -100,7 +100,6 @@ namespace Microsoft.Bot.Sample.ProactiveBot
                 {
                     SendEmail(EmailAddresses[j], " ", "svc_hq_o365_test_bo@txt.textron.com", "Lulu", Subject, Body, false);
                 }
-
             }
             else
             {
