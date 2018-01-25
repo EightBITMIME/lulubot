@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Threading.Tasks;
 
 using Microsoft.Bot.Connector;
@@ -16,7 +17,8 @@ namespace Microsoft.Bot.Sample.ProactiveBot
     public class ProactiveDialog : IDialog<object>
     {
         public String incident = "";
-        public String update = "";
+        public ArrayList updates = new ArrayList();
+        public int updateNum = 0;
 
         public async Task StartAsync(IDialogContext context)
         {
@@ -32,7 +34,9 @@ namespace Microsoft.Bot.Sample.ProactiveBot
             //update status
             bool c = message.Text.StartsWith("update")  || message.Text.StartsWith("Update");
 
-            bool d = message.Text.Contains("Ok to close");
+            bool d = message.Text.Contains("Ok to close") || message.Text.Contains("ok to close");
+
+            bool e = message.Text.StartsWith("Status") || message.Text.StartsWith("status");
 
             // Create a queue Message
             var queueMessage = new Message
@@ -60,7 +64,7 @@ namespace Microsoft.Bot.Sample.ProactiveBot
             //update status
             else if (c)
             {
-                update += "/n" + message.Text;
+                updates.Add("Update " + updateNum + " " + message.Text);
                 await context.PostAsync($"Status updated");
                 context.Wait(MessageReceivedAsync);
             }
@@ -69,8 +73,16 @@ namespace Microsoft.Bot.Sample.ProactiveBot
             {
                 await context.PostAsync($"The ticket is now closed.");
                 incident = "";
-                update = "";
-        context.Wait(MessageReceivedAsync);
+                updates.Clear();
+                context.Wait(MessageReceivedAsync);
+            }
+            else if (e)
+            {
+                await context.PostAsync($"These are the reported updates:");
+                for (int i = 0; i < updates.Count; i++)
+                {
+                    await context.PostAsync(updates[i].ToString());
+                }
             }
             else
             {
