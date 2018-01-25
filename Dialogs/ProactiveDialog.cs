@@ -15,6 +15,8 @@ namespace Microsoft.Bot.Sample.ProactiveBot
     [Serializable]
     public class ProactiveDialog : IDialog<object>
     {
+        public String incident = "";
+
         public async Task StartAsync(IDialogContext context)
         {
             context.Wait(MessageReceivedAsync);
@@ -23,6 +25,7 @@ namespace Microsoft.Bot.Sample.ProactiveBot
         public async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> argument)
         {
             var message = await argument;
+            
                 // Create a queue Message
                 //test comment
                 var queueMessage = new Message
@@ -38,6 +41,8 @@ namespace Microsoft.Bot.Sample.ProactiveBot
             {
                 await context.PostAsync($"Please describe the security incident");
                 context.Wait(MessageReceivedAsync);
+
+                incident = message.Text;
             }
             else
             {
