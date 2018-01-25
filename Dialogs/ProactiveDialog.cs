@@ -28,9 +28,9 @@ namespace Microsoft.Bot.Sample.ProactiveBot
             var message = await argument;
 
             //description of incident
-            bool b = message.Text.Contains("incident") || message.Text.Contains("Incident");
+            bool b = message.Text.StartsWith("Incident") || message.Text.StartsWith("incident");
             //update status
-            bool c = message.Text.Contains("update")  || message.Text.Contains("Update");
+            bool c = message.Text.StartsWith("update")  || message.Text.StartsWith("Update");
 
             bool d = message.Text.Contains("Ok to close");
 
@@ -60,7 +60,7 @@ namespace Microsoft.Bot.Sample.ProactiveBot
             //update status
             else if (c)
             {
-                update = message.Text;
+                update += "/n" + message.Text;
                 await context.PostAsync($"Status updated");
                 context.Wait(MessageReceivedAsync);
             }
@@ -68,7 +68,9 @@ namespace Microsoft.Bot.Sample.ProactiveBot
             else if (d)
             {
                 await context.PostAsync($"The ticket is now closed.");
-                context.Wait(MessageReceivedAsync);
+                incident = "";
+                update = "";
+        context.Wait(MessageReceivedAsync);
             }
             else
             {
