@@ -16,6 +16,7 @@ namespace Microsoft.Bot.Sample.ProactiveBot
     public class ProactiveDialog : IDialog<object>
     {
         public String incident = "";
+        public String update = "";
 
         public async Task StartAsync(IDialogContext context)
         {
@@ -25,10 +26,16 @@ namespace Microsoft.Bot.Sample.ProactiveBot
         public async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> argument)
         {
             var message = await argument;
-            
-                // Create a queue Message
-                //test comment
-                var queueMessage = new Message
+
+            //description of incident
+            bool b = message.Text.Contains("incident");
+            //update status
+            bool c = message.Text.Contains("Update");
+
+            bool d = message.Text.Contains("Incident ok to close");
+
+            // Create a queue Message
+            var queueMessage = new Message
                 {
                     RelatesTo = context.Activity.ToConversationReference(),
                     Text = message.Text
@@ -37,16 +44,31 @@ namespace Microsoft.Bot.Sample.ProactiveBot
                 // write the queue Message to the queue
                 await AddMessageToQueueAsync(JsonConvert.SerializeObject(queueMessage));
 
+            //starting message
             if (message.Text == "I would like to report a security incident")
             {
-                await context.PostAsync($"Please describe the security incident");
+                await context.PostAsync($"Please describe the security incident starting with the word 'Incident:'");
                 context.Wait(MessageReceivedAsync);
-
+            }
+            //description of security incident
+            else if(b){
                 incident = message.Text;
-                await context.PostAsync(incident);
-
-                //await context.PostAsync($"The incident has been recorded. To update the incident, please ");
-                //context.Wait(MessageReceivedAsync);
+                await context.PostAsync($"Incident has been recorded. In order to add updates please type 'update' followed by the update.");
+                await context.PostAsync($"In order to get the status of the incident, please type 'Status'. In order to close the incident please type 'Incident ok to close'");
+                context.Wait(MessageReceivedAsync);
+            }
+            //update status
+            else if (c)
+            {
+                update = message.Text;
+                await context.PostAsync($"Status updated");
+                context.Wait(MessageReceivedAsync);
+            }
+            //closing incident
+            else if (d)
+            {
+                await context.PostAsync($"The ticket is now closed.");
+                context.Wait(MessageReceivedAsync);
             }
             else
             {
