@@ -28,11 +28,11 @@ namespace Microsoft.Bot.Sample.ProactiveBot
             var message = await argument;
 
             //description of incident
-            bool b = message.Text.Contains("incident");
+            bool b = message.Text.Contains("incident") || message.Text.Contains("Incident");
             //update status
-            bool c = message.Text.Contains("Update");
+            bool c = message.Text.Contains("update")  || message.Text.Contains("Update");
 
-            bool d = message.Text.Contains("Incident ok to close");
+            bool d = message.Text.Contains("Ok to close");
 
             // Create a queue Message
             var queueMessage = new Message
@@ -54,7 +54,7 @@ namespace Microsoft.Bot.Sample.ProactiveBot
             else if(b){
                 incident = message.Text;
                 await context.PostAsync($"Incident has been recorded. In order to add updates please type 'update' followed by the update.");
-                await context.PostAsync($"In order to get the status of the incident, please type 'Status'. In order to close the incident please type 'Incident ok to close'");
+                await context.PostAsync($"In order to get the status of the incident, please type 'Status'. In order to close the incident please type 'Ok to close'");
                 context.Wait(MessageReceivedAsync);
             }
             //update status
