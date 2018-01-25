@@ -82,6 +82,7 @@ namespace Microsoft.Bot.Sample.ProactiveBot
                 await context.PostAsync($"The ticket is now closed.");
                 incident = "";
                 updates.Clear();
+                updateNum = 0;
                 context.Wait(MessageReceivedAsync);
             }
             else if (e)
@@ -89,7 +90,7 @@ namespace Microsoft.Bot.Sample.ProactiveBot
                 await context.PostAsync($"These are the reported updates:");
                 for (int i = 0; i < updates.Count; i++)
                 {
-                    await context.PostAsync(updates[i].ToString());
+                    await context.PostAsync(updates[i+1].ToString());
                 }
                 context.Wait(MessageReceivedAsync);
             }
