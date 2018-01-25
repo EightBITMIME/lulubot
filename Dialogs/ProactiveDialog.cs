@@ -43,6 +43,10 @@ namespace Microsoft.Bot.Sample.ProactiveBot
                 context.Wait(MessageReceivedAsync);
 
                 incident = message.Text;
+                await context.PostAsync(incident);
+
+                //await context.PostAsync($"The incident has been recorded. To update the incident, please ");
+                //context.Wait(MessageReceivedAsync);
             }
             else
             {
