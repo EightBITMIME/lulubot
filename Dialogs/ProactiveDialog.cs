@@ -61,7 +61,8 @@ namespace Microsoft.Bot.Sample.ProactiveBot
                 context.Wait(MessageReceivedAsync);
             }
             //description of security incident
-            else if(b){
+            else if(b)
+            {
                 incident = message.Text;
                 await context.PostAsync($"Incident has been recorded. In order to add updates please type 'update' followed by the update.");
                 await context.PostAsync($"In order to get the status of the incident, please type 'Status'. In order to close the incident please type 'Ok to close'");
@@ -104,6 +105,7 @@ namespace Microsoft.Bot.Sample.ProactiveBot
             else
             {
                 await context.PostAsync($"<sarcastic mocking> {queueMessage.Text}.");
+
                 context.Wait(MessageReceivedAsync);
             }
         }
