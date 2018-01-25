@@ -103,7 +103,7 @@ namespace Microsoft.Bot.Sample.ProactiveBot
             }
             else
             {
-                await context.PostAsync($"<sarcastic mocking> {queueMessage.Text}.");
+                await context.PostAsync($"<sarcastic mocking> 1 {queueMessage.Text}.");
                 context.Wait(MessageReceivedAsync);
             }
         }
