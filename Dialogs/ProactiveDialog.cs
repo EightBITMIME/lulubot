@@ -90,6 +90,7 @@ namespace Microsoft.Bot.Sample.ProactiveBot
                 {
                     await context.PostAsync(updates[i].ToString());
                 }
+                context.Wait(MessageReceivedAsync);
             }
             else if (email)
             {
@@ -98,6 +99,7 @@ namespace Microsoft.Bot.Sample.ProactiveBot
                 {
                     SendEmail(EmailAddresses[j], " ", "svc_hq_o365_test_bo@txt.textron.com", "Lulu", Subject, Body, false);
                 }
+                context.Wait(MessageReceivedAsync);
             }
             else
             {
