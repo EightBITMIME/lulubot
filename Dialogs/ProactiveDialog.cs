@@ -20,9 +20,9 @@ namespace Microsoft.Bot.Sample.ProactiveBot
         public String incident = "";
         public ArrayList updates = new ArrayList();
         public int updateNum = 0;
-        public string[] EmailAddresses = ["lhutchison@textron.com", "jcoles@textron.com", "cschultz@textron.com", "dcyr@textron.com"];
-        public String Body = "Lulu Test";
-        public string Subject = "Lulu Test";
+        //public string[] EmailAddresses = ["lhutchison@textron.com", "jcoles@textron.com", "cschultz@textron.com", "dcyr@textron.com"];
+        //public String Body = "Lulu Test";
+        //public string Subject = "Lulu Test";
 
         public async Task StartAsync(IDialogContext context)
         {
@@ -42,7 +42,7 @@ namespace Microsoft.Bot.Sample.ProactiveBot
 
             bool e = message.Text.StartsWith("Status") || message.Text.StartsWith("status");
 
-            bool email = message.Text.Contains("Send email") || message.Text.Contains("send email");
+            //bool email = message.Text.Contains("Send email") || message.Text.Contains("send email");
 
             // Create a queue Message
             var queueMessage = new Message
@@ -93,7 +93,7 @@ namespace Microsoft.Bot.Sample.ProactiveBot
                 }
                 context.Wait(MessageReceivedAsync);
             }
-            else if (email)
+            /*else if (email)
             {
                 await context.PostAsync($"Sending emails to all participants");
                 for (int j = 0; j < EmailAddresses.Length; j++)
@@ -101,7 +101,7 @@ namespace Microsoft.Bot.Sample.ProactiveBot
                     SendEmail(EmailAddresses[j], " ", "svc_hq_o365_test_bo@txt.textron.com", "Lulu", Subject, Body, false);
                 }
                 context.Wait(MessageReceivedAsync);
-            }
+            }*/
             else
             {
                 await context.PostAsync($"<sarcastic mocking> {queueMessage.Text}.");
@@ -129,7 +129,7 @@ namespace Microsoft.Bot.Sample.ProactiveBot
             await queue.AddMessageAsync(queuemessage);
         }
 
-        public static bool SendEmail(string To, string ToName, string From, string FromName, string Subject, string Body, bool IsBodyHTML)
+        /*public static bool SendEmail(string To, string ToName, string From, string FromName, string Subject, string Body, bool IsBodyHTML)
         {
             try
             {
@@ -162,7 +162,7 @@ namespace Microsoft.Bot.Sample.ProactiveBot
             {
                 return false;
             }
-        }
+        }*/
 
     }
 }
